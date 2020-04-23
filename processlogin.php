@@ -45,16 +45,16 @@ require_once('functions/user.php');
         $_SESSION['loginTime'] = date("h:i:sa");
 
           if($userObject->designation == 'patient'){
-  				redirect_to("patient.php");
+  				redirect_to("patientDashboard.php");
   			 	die();
          }
          elseif ($userObject->designation =='medical-staff') {
-          redirect_to("medical.php");
+          redirect_to("medicalStaffDashboard.php");
           die();
          }
 
          elseif($userObject->designation == 'admin') {
-          redirect_to("SuperAdmin.php");
+          redirect_to("SuperAdminDashboard.php");
           die();
          }
 		  }

@@ -4,12 +4,12 @@
  require_once('functions/user.php') ?>
 
 <?php if (is_user_loggedIn() && $_SESSION['designation']=='patient') {
-	header("location: patient.php");
+	header("location: patientDashboard.php");
      } 
 ?>
 
 <?php if (is_user_loggedIn() && $_SESSION['designation']=='medical-staff') {
-  header("location: medical.php");
+  header("location: medicalStaffDashboard.php");
       } 
 ?>
 

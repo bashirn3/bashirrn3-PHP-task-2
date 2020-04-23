@@ -99,7 +99,7 @@ else{  //Register new user
     //check if it's admin that added that user or not
     if(is_user_loggedIn() && $_SESSION['designation']=='admin')  {
       $_SESSION['message']='You have succesfully resgitered a new user';
-      redirect_to("SuperAdmin.php");
+      redirect_to("SuperAdminDashboard.php");
     }
     else{
       $_SESSION['message']='Registeration Succesful you can now log in ' . $firstName;

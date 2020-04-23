@@ -26,12 +26,12 @@
                 
                 <a class="p-2 text-dark" 
                   <?php if (isset($_SESSION['loggedIn']) && !empty($_SESSION['loggedIn']) && $_SESSION['designation']=='patient') {
-                  	echo "href = patient.php";
+                  	echo "href = patientDashboard.php";
                   }else if (isset($_SESSION['loggedIn']) && !empty($_SESSION['loggedIn']) && $_SESSION['designation']=='medical-staff')
                   {
-                  	echo "href = medical.php";
+                  	echo "href = medicalStaffDashboard.php";
                   } else{
-                  	echo "href = SuperAdmin.php";
+                  	echo "href = SuperAdminDashboard.php";
                   } ?>>
 
                    Dashboard</a>                

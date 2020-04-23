@@ -1,5 +1,17 @@
 <?php include_once('lib/header.php');
  require_once('functions/alert.php');
+ require_once('functions/user.php');
+
+?>
+
+<?php if (is_user_loggedIn() && $_SESSION['designation']=='patient') {
+    header("location: patientDashboard.php");
+     } 
+?>
+
+<?php if (is_user_loggedIn() && $_SESSION['designation']=='medical-staff') {
+  header("location: medicalStaffDashboard.php");
+      } 
 ?>
 
 <div class="container shadow p-3 mt-5 mb-5 bg-white rounded w-25">
