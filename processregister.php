@@ -1,7 +1,11 @@
 <?php session_start();
+  require_once('functions/user.php');
+  require_once('functions/alert.php');
+  require_once('functions/redirect.php');
 
   $errorCount= 0;
 
+//validation
  $firstName=$_POST["firstName"] !="" ? $_POST["firstName"] : $errorCount++;
  $secondName=$_POST['secondName'] !="" ? $_POST['secondName'] : $errorCount++;
  $email=$_POST['email'] !="" ? $_POST['email'] : $errorCount++;
@@ -33,29 +37,38 @@ if($errorCount > 0){
     $session_error .=   " in your form submission";
     $_SESSION["error"] = $session_error ;
 
-    header("Location: register.php");
+    redirect_to("register.php");
 
-}elseif (!preg_match("/^[a-zA-Z ]*$/", $firstName) || !preg_match("/^[a-zA-Z ]*$/", $secondName)) {
-  $_SESSION['err'] = 'Only letters and white spaces allowed in name field';
-  header("Location:register.php");
+}
+//check if first and second name fields are valid
+elseif (!preg_match("/^[a-zA-Z ]*$/", $firstName) || !preg_match("/^[a-zA-Z ]*$/", $secondName)) {
+  $_SESSION['error'] = 'Only letters and white spaces allowed in name field';
+  redirect_to("register.php");
   die();
 
-}elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-	$_SESSION['err'] = 'Email is not valid, please try again';
-	header("Location:register.php");
+}
+//check if email field is valid
+elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+	$_SESSION['error'] = 'Email is not valid, please try again';
+	redirect_to("register.php");
     die();
 
-}elseif (strlen($firstName)< 2 || strlen($secondName) < 2) {
-	$_SESSION['err']='Name should be longer than 2 characters';
-	header("Location:register.php");
+}
+//check if first name and second name fields have enough characters; ie 2 or greater
+elseif (strlen($firstName)< 2 || strlen($secondName) < 2) {
+	$_SESSION['error']='Name should be longer than 2 characters';
+	redirect_to("register.php");
     die();
 }
+
+//check if email field has enough characters; ie 5 or greater
 elseif (strlen($email)< 5) {
-	$_SESSION['err']='Email should be longer than 5 characters';
-	header("Location:register.php");
+	$_SESSION['error']='Email should be longer than 5 characters';
+	redirect_to("register.php");
     die();
 }
-else{
+
+else{  //Register new user
 	   $allUsers= scandir('db/users/');
 	   $countAllUsers=count($allUsers);
 
@@ -68,24 +81,31 @@ else{
         'password'=> password_hash($password, PASSWORD_DEFAULT), //password hashing
         'gender'=>$gender,
         'designation'=>$designation,
-        'department'=>$department
-    ];
+        'department'=>$department,
+        'regDate'=>date("d/m/Y")
+     ];
     
-for($i=0; $i<$countAllUsers; $i++){
-	$currentUser = $allUsers[$i];
+  $userExists = find_user($email);
 
-	if ($currentUser==$email.".json") {
+  if($userExists){
 		$_SESSION['error']='Registeration failed, user already exists';
-		header("Location: register.php");
+		redirect_to("register.php");
 		die();
 	}
-}
+
 
     file_put_contents("db/users/" .$email .".json", json_encode($userObject));
-    $_SESSION['message']='Registeration Succesful you can now log in ' . $firstName;
-    $_SESSION['loginDate']= date("d/m/Y");
-    header("Location:login.php");
- }
+
+    //check if it's admin that added that user or not
+    if(is_user_loggedIn() && $_SESSION['designation']=='admin')  {
+      $_SESSION['message']='You have succesfully resgitered a new user';
+      redirect_to("SuperAdmin.php");
+    }
+    else{
+      $_SESSION['message']='Registeration Succesful you can now log in ' . $firstName;
+      redirect_to("login.php");
+    }
+}
 
 
 ?>

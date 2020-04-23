@@ -1,5 +1,9 @@
 <?php session_start();
 
+require_once('functions/alert.php');
+require_once('functions/redirect.php');
+require_once('functions/user.php');
+
   $errorCount= 0;
 
  $email=$_POST['email'] !="" ? $_POST['email'] : $errorCount++;
@@ -8,27 +12,22 @@
 
  if($errorCount > 0){
 
-     $session_error = "You have " . $errorCount . " error";
+     $session_error = "You have " . $errorCount . " blank field";
     
     if($errorCount > 1) {        
         $session_error .= "s";
     }
 
-    $session_error .=   " in your form submission";
-    $_SESSION["error"] = $session_error ;
-
-    header("Location: login.php");
+    set_alert('error',$session_error);
+      
+    redirect_to("login.php");
   }
   else{
-    
-    $allUsers = scandir("db/users/");
-    $countAllUsers = count($allUsers);
+      $currentUser = find_user($email);
 
-    for($i=0; $i<$countAllUsers; $i++){
-	  $currentUser = $allUsers[$i];
+      if ($currentUser){
 
-		if ($currentUser==$email.".json") {
-			$userString= file_get_contents("db/users/".$currentUser);
+			$userString= file_get_contents("db/users/".$currentUser->email . ".json");
 			$userObject = json_decode($userString);
 			$passwordFromDb=$userObject->password;
 
@@ -36,31 +35,33 @@
 			 $passwordFromUser = password_verify($password, $passwordFromDb);
 
 			 if ($passwordFromDb == $passwordFromUser) {
+        $_SESSION["firstName"]=$userObject->firstName;
         $_SESSION['loggedIn']=$userObject->id;
         $_SESSION['designation']=$userObject->designation;
         $_SESSION['department']=$userObject->department;
+        $_SESSION['regDate']=$userObject->regDate;
         date_default_timezone_set("Africa/Lagos");
         $_SESSION['loginDate']= date("d/m/Y");
         $_SESSION['loginTime'] = date("h:i:sa");
 
-          if($userObject->designation == 'intern'){
-  				header("Location:dashboard.php");
+          if($userObject->designation == 'patient'){
+  				redirect_to("patient.php");
   			 	die();
          }
-         elseif ($userObject->designation =='mentor') {
-          header("Location:dashboard2.php");
+         elseif ($userObject->designation =='medical-staff') {
+          redirect_to("medical.php");
           die();
          }
 
          elseif($userObject->designation == 'admin') {
-          header("Location:dashboard3.php");
+          redirect_to("SuperAdmin.php");
           die();
          }
 		  }
 
-	   }
+	   
     }
      
     $_SESSION["error"] = "Invalid Email or Password" ;
-    header("Location: login.php");  
+    redirect_to("login.php");  
   }

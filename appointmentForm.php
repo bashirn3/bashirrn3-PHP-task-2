@@ -1,21 +1,21 @@
-<?php
- include_once('lib/header.php');
- require_once('functions/alert.php');
- require_once('functions/user.php') ?>
+<?php include_once('lib/header.php');
+      include_once('functions/alert.php');
+      include_once('functions/redirect.php');
+      include_once('functions/user.php');
 
-<?php if (is_user_loggedIn() && $_SESSION['designation']=='patient') {
-	header("location: patient.php");
+?>
+
+
+<?php if (!is_user_loggedIn()) {
+
+	redirect_to("login.php");
+   $_SESSION['error']='You are not authorized to view that page';
      } 
 ?>
 
-<?php if (is_user_loggedIn() && $_SESSION['designation']=='medical-staff') {
-  header("location: medical.php");
-      } 
-?>
-
-<div class="container shadow p-3 mt-5 mb-5 bg-white rounded w-25">
+<div class="container shadow p-3 mt-5 mb-5 bg-white rounded w-75">
     <div class="text-center">
-        <h3>Register</h3>
+        <h3>Appointment Form</h3>
         <p>All fields are required</p>
         <hr>
     </div>
@@ -24,7 +24,7 @@
         <?php  print_alert(); ?>
         </p>
      
-      <form action='processregister.php' method='POST'>
+      <form action='processappointment.php' method='POST'>
       
       <p>
       	<label for='firstName'>First Name</label><br>
@@ -55,60 +55,31 @@
       </p>
 
       <p>
-      	<label for='email'>Email</label><br>
-          <input 
-            
-           <?php 
-            if(isset($_SESSION['email'])){
-              echo "value=" . $_SESSION['email'];
-        
-            }
-          ?>
-         
-          class="form-control bg-light" type='email' name = 'email' id='email'>
-      	
+      	<label for='date'>Date of appointment</label><br>
+          <input class="form-control bg-light" type='date' name = 'date-of-appointment' id='date'>
       </p>
 
       <p>
-      	<label for='password'>Password</label><br>
-          <input class="form-control  bg-light" type='password' name = 'password' id='password'>
+      	<label for='time'>Time</label><br>
+          <input class="form-control  bg-light" type='time' name = 'time-of-appointment' id='time'>
       </p>
 
       <p>
-      	<label for='gender'>Gender</label><br>
-          <select class="form-control" name='gender'>
+      	<label for='gender'>Nature of Appointment</label><br>
+          <select class="form-control" name='nature-of-appointment'>
           	<option value=''>Select One</option>
           	<option 
                  <?php              
-                     if(isset($_SESSION['gender']) && $_SESSION['gender'] == 'male'){
+                     if(isset($_SESSION['nature-of-appointment']) && $_SESSION['nature-of-appointment'] == 'new'){
                         echo "selected";               
                   }?>
-          	value='male'>Male</option>
+          	value='new'>New appointment</option>
           	<option 
                 <?php              
-                     if(isset($_SESSION['gender']) && $_SESSION['gender'] == 'female'){
+                     if(isset($_SESSION['nature-of-appointment']) && $_SESSION['nature-of-appointment'] == 'follow-up'){
                         echo "selected";               
                   }?>
-          	value='female'>Female</option>
-          </select> 
-      </p>
-
-      <p>
-       <label for='gender'>Designation</label><br>
-          <select class="form-control" name='designation'>
-          	<option value=''>Select One</option>
-          	<option 
-                <?php              
-                     if(isset($_SESSION['designation']) && $_SESSION['designation'] == 'patient'){
-                        echo "selected";               
-                  }?>
-          	value='patient'>Patient</option>
-          	<option 
-                <?php              
-                     if(isset($_SESSION['designation']) && $_SESSION['designation'] == 'medical-staff'){
-                        echo "selected";               
-                  }?>
-          	value='medical-staff'>Medical Team(MT)</option>
+          	value='follow-up'>Follow up appointment</option>
           </select> 
       </p>
 
@@ -139,10 +110,18 @@
           </select> 
       </p>
 
+       <p>
+      	<label for='initial-complaint'>Initial Complaint</label><br>
+        <textarea  class="form-control bg-light" row="5" name ='initial-complaint' id='initial-complaint'> 
+        </textarea>
+      </p>
       <p>
-      <button class="btn btn-success btn-block"  type='submit'>Register</button>
+      <button class="btn btn-success btn-block"  type='submit'>Book Appointment</button>
       </p>
  </form>
 </div>
 </div>
-<?php include_once('lib/footer.php') ?>
+
+
+
+<?php include_once('lib/footer.php'); ?>
