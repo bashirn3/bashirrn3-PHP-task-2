@@ -16,7 +16,6 @@
 	<table class="table">
 	  <thead class="thead-dark">
 	    <tr>
-	      <th scope="col">Serial No</th>
 	      <th scope="col">User ID</th>
 	      <th scope="col">First Name</th>
 	       <th scope="col">Second Name</th>
@@ -44,7 +43,6 @@
           	    if ($userObject->designation == 'medical-staff')  {
           	    	// display all medical staff
           	    	echo   '<tr>
-          	    	          <td>'.$counter.'</td>
 						      <td>'.$userObject->id.'</td>
 						      <td>'.$userObject->firstName.'</td>
 						      <td>'.$userObject->secondName.'</td>
