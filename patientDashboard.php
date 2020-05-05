@@ -15,7 +15,7 @@
 
      <?php echo "<h4>Welcome " . $_SESSION["firstName"]. "," . " You are logged in as a ( ". $_SESSION['designation']. " )</h4>" ?>
 
-     <a class=" btn btn-success mt-3 mr-2" href="#">Pay Bill</a>
+     <a class=" btn btn-success mt-3 mr-2" href="payBill.php">Pay Bill</a>
      <a class=" btn btn-outline-success mt-3" href="appointmentForm.php">Book appointment</a>
   </div>
 
